@@ -17,6 +17,7 @@ const ROUTES: { path: string; name: string }[] = [
   { path: "/pay", name: "pay" },
   { path: "/vacation", name: "vacation" },
   { path: "/savings", name: "savings" },
+  { path: "/settings", name: "settings" },
   { path: "/no-such-page", name: "notfound" },
 ];
 
