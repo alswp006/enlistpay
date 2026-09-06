@@ -15,6 +15,7 @@ const ROUTES: { path: string; name: string }[] = [
   { path: "/onboarding", name: "onboarding" },
   { path: "/rank", name: "rank" },
   { path: "/pay", name: "pay" },
+  { path: "/vacation", name: "vacation" },
   // { path: "/result", name: "result" },   // ← 이 앱의 라우트를 추가
   // { path: "/settings", name: "settings" },
 ];
