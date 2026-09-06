@@ -1,0 +1,24 @@
+{
+  "koreanName": "전역카운트",
+  "englishName": "EnlistPay",
+  "appName": "enlist-pay",
+  "ageRating": "만 19세 이상",
+  "supportEmail": "support@aifactory.dev",
+  "category": {
+    "primary": "생활",
+    "secondary": "금융"
+  },
+  "subtitle": "입대부터 전역까지 급여 관리",
+  "description": "입대일을 입력하면 전역일까지의 D-day가 매일 업데이트됩니다. 현재 계급별 월급과 진급일을 확인하고, 적립된 휴가 일수를 추적합니다. 상세 정보에서는 총 누적 급여액, 휴가 통계, 전역 후 적금 시뮬레이션까지 한눈에 관리할 수 있습니다.",
+  "searchKeywords": [
+    "전역일",
+    "군 월급",
+    "병사 급여",
+    "휴가 계산",
+    "전역 계산",
+    "입대 D-day",
+    "장병 관리",
+    "군 생활",
+    "적금 계획"
+  ]
+}
