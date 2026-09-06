@@ -6,7 +6,7 @@
  */
 
 /** All domain logic and UI depend on military branch type (구현: 패킷 0001) */
-export type MilitaryBranch = type MilitaryBranch = 'ARMY' | 'NAVY' | 'AIR_FORCE' | 'MARINE_CORPS';
+export type MilitaryBranch = 'ARMY' | 'NAVY' | 'AIR_FORCE' | 'MARINE_CORPS';
 
 /** Core entity used in storage (0003), calculations (0005-0008), and all pages (구현: 패킷 0001) */
 export type User = { id: string; militaryBranch: MilitaryBranch; enlistmentDate: string; dischargeDate?: string };

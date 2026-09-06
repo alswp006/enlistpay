@@ -1,2 +1,1 @@
-// Domain types — add your app-specific types here
-export {};
+export * from '../domain/types';
