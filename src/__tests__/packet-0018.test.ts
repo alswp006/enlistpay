@@ -68,9 +68,15 @@ vi.mock("@/app/AppDataProvider", () => ({
 import App from "@/App";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-function renderAppAt(path: string) {
-  return render(React.createElement(MemoryRouter, { initialEntries: [path] }, React.createElement(App)));
+function renderAppAt(path: string, state?: unknown) {
+  const entry = state === undefined ? path : { pathname: path, state };
+  return render(React.createElement(MemoryRouter, { initialEntries: [entry] }, React.createElement(App)));
 }
+
+const SAVINGS_RESULT_STATE = {
+  input: { monthlyDeposit: 400000, months: 18, annualRatePercent: 5, useGovMatch: true },
+  result: { principal: 7200000, interest: 300000, govMatch: 1440000, total: 8940000 },
+};
 
 describe("라우터 배선 + 전역 Provider + 탭바 + NotFound", () => {
   beforeEach(() => {
@@ -80,21 +86,21 @@ describe("라우터 배선 + 전역 Provider + 탭바 + NotFound", () => {
   });
 
   it("AC-1[P0]: 8개 라우트 모두 진입 시 흰 화면 없이 콘텐츠가 렌더된다", () => {
-    const cases: Array<{ path: string; profile: ServiceProfile | null; flags: AppFlags }> = [
+    const cases: Array<{ path: string; profile: ServiceProfile | null; flags: AppFlags; state?: unknown }> = [
       { path: "/", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
       { path: "/rank", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
       { path: "/pay", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
       { path: "/vacation", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
       { path: "/savings", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
-      { path: "/savings/result", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
+      { path: "/savings/result", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS, state: SAVINGS_RESULT_STATE },
       { path: "/settings", profile: FULL_TERM_PROFILE, flags: ONBOARDED_FLAGS },
       { path: "/onboarding", profile: null, flags: NOT_ONBOARDED_FLAGS },
     ];
 
-    for (const { path: routePath, profile, flags } of cases) {
+    for (const { path: routePath, profile, flags, state } of cases) {
       mockProfile = profile;
       mockFlags = flags;
-      const { container, unmount } = renderAppAt(routePath);
+      const { container, unmount } = renderAppAt(routePath, state);
       expect(container.textContent, `route ${routePath} should not be blank`).not.toBe("");
       expect(container.textContent!.trim().length, `route ${routePath} should render content`).toBeGreaterThan(0);
       unmount();
@@ -164,7 +170,7 @@ describe("라우터 배선 + 전역 Provider + 탭바 + NotFound", () => {
 
     mockProfile = FULL_TERM_PROFILE;
     mockFlags = ONBOARDED_FLAGS;
-    renderAppAt("/savings/result");
+    renderAppAt("/savings/result", SAVINGS_RESULT_STATE);
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryAllByRole("tab")).toHaveLength(0);
   });
