@@ -196,11 +196,9 @@ CRITICAL: Before creating any new function, type, or component, check the list a
 - 0018: 라우터 배선 + 전역 Provider + 탭바 + NotFound (files: src/App.tsx, src/pages/NotFound.tsx, src/components/ErrorBoundary.tsx)
 - 0016: 적금 결과 화면 (state null 방어) (files: src/pages/SavingsResult.tsx)
 - 0017: [부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지 (files: src/pages/Settings.tsx)
+- 0019: 배너 슬롯 래퍼 · 햅틱 헬퍼 · 검수 정책 정적 스캔 (files: src/components/AdFooterSlot.tsx, src/hooks/useHaptic.ts, scripts/policy-scan.mjs)
 
 ## Available exports from existing files
-// src/App.tsx
-export default function App() {
-
 // src/app/AppDataProvider.tsx
 export interface AppDataContextValue {
 export const AppDataContext = createContext<AppDataContextValue | null>(null);
@@ -208,6 +206,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
 // src/app/useAppData.ts
 export function useAppData(): AppDataContextValue {
+
+// src/components/AdFooterSlot.tsx
+export function AdFooterSlot() {
 
 // src/components/AdSlot.tsx
 export function AdSlot({ adGroupId, className, variant, theme }: AdSlotProps) {
@@ -267,7 +268,7 @@ export function TossRewardAd({
 
 // src/components/VacationFormSheet.tsx
 export const TYPE_LABEL: Record<VacationType, string> = {
-export function Vacati
+e
 
 ## Memory Index (자동 학습 — 힌트로만 사용, 실제 코드 확인 필수)
 
