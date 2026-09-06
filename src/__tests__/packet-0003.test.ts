@@ -90,8 +90,10 @@ describe("safeSet: localStorage write with QuotaExceededError handling", () => {
     const { safeSet } = await import("@/storage/core");
 
     // Mock localStorage.setItem to throw QuotaExceededError
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = vi.fn(() => {
+    // (jsdom's Storage is a legacy platform object — direct property
+    // assignment on the instance is silently ignored, so the prototype
+    // method must be spied on instead)
+    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       const err = new Error("QuotaExceededError");
       err.name = "QuotaExceededError";
       throw err;
@@ -103,16 +105,14 @@ describe("safeSet: localStorage write with QuotaExceededError handling", () => {
       expect(result.error).toBe("저장 공간이 부족해요");
     }
 
-    // Restore
-    localStorage.setItem = originalSetItem;
+    spy.mockRestore();
   });
 
   it("AC-2.3: app doesn't crash when QuotaExceededError occurs", async () => {
     const { safeSet } = await import("@/storage/core");
 
-    const originalSetItem = localStorage.setItem;
     let callCount = 0;
-    localStorage.setItem = vi.fn(() => {
+    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       callCount++;
       const err = new Error("QuotaExceededError");
       err.name = "QuotaExceededError";
@@ -125,7 +125,7 @@ describe("safeSet: localStorage write with QuotaExceededError handling", () => {
     }).not.toThrow();
 
     expect(callCount).toBe(1);
-    localStorage.setItem = originalSetItem;
+    spy.mockRestore();
   });
 
   it("AC-2.4: returns { ok: true } for empty values", async () => {
@@ -176,7 +176,7 @@ describe("newId: ID generation with crypto.randomUUID fallback", () => {
     const { newId } = await import("@/storage/core");
 
     // If crypto.randomUUID is available (most modern envs)
-    if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
       const id = newId();
       // UUID format: 8-4-4-4-12 hex digits
       expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
@@ -374,8 +374,7 @@ describe("saveProfile: save ServiceProfile with result type", () => {
   it("AC-6.2: returns { ok: false, error: '저장 공간이 부족해요' } on QuotaExceededError", async () => {
     const { saveProfile } = await import("@/storage/profile");
 
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = vi.fn(() => {
+    const spy = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
       const err = new Error("QuotaExceededError");
       err.name = "QuotaExceededError";
       throw err;
@@ -398,7 +397,7 @@ describe("saveProfile: save ServiceProfile with result type", () => {
       expect(result.error).toBe("저장 공간이 부족해요");
     }
 
-    localStorage.setItem = originalSetItem;
+    spy.mockRestore();
   });
 
   it("AC-6.3: persists profile to localStorage with exact key", async () => {
