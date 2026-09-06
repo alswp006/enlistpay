@@ -80,6 +80,7 @@ export * from '../domain/types';
     AppDataProvider.tsx
     useAppData.ts
   components/
+    AdFooterSlot.tsx
     AdSlot.tsx
     Amount.tsx
     BottomCTA.tsx
@@ -109,6 +110,7 @@ export * from '../domain/types';
     types.ts
     vacation.ts
   hooks/
+    useHaptic.ts
     useRewardUnlock.ts
   lib/
     contract.ts
@@ -146,6 +148,7 @@ export * from '../domain/types';
 - utils.ts: export function cn(...classes: (string | boolean | undefined | null)[]): string; export function formatNumber(n: number): string; export function formatCurrency(n: number, currency = 'KRW'): string
 
 ### Components (src/components/)
+- AdFooterSlot.tsx: AdFooterSlot
 - AdSlot.tsx: AdSlot
 - Amount.tsx: Amount
 - BottomCTA.tsx: SubmitFooter, ButtonStack
@@ -169,6 +172,8 @@ export * from '../domain/types';
   pages/Onboarding.tsx → imports: app/useAppData, components/ScreenScaffold, components/BottomCTA, components/Card, domain/dday, domain/date, domain/payTable, lib/types
   pages/Pay.tsx → imports: components/TossRewardAd
   pages/Savings.tsx → imports: app/useAppData, components/ScreenScaffold, components/CalcDisclaimer, domain/savings, storage/savingsInput, domain/date, lib/types
+  pages/SavingsResult.tsx → imports: components/ScreenScaffold, components/SummaryHero, components/CountUp, components/Amount, components/AdSlot, components/CalcDisclaimer, lib/types
+  pages/Settings.tsx → imports: components/ScreenScaffold, components/Card, app/useAppData, domain/dday, domain/date, domain/payTable, lib/types
   pages/Vacation.tsx → imports: components/ScreenScaffold, components/Card, components/StateView, components/AdSlot, components/VacationFormSheet, app/useAppData, domain/vacation, domain/payTable, domain/date, lib/types
 CRITICAL: Before creating any new function, type, or component, check the list above. If something similar exists, import and use it.
 
@@ -190,6 +195,7 @@ CRITICAL: Before creating any new function, type, or component, check the list a
 - 0015: 적금 시뮬레이션 입력 화면 (files: src/pages/Savings.tsx)
 - 0018: 라우터 배선 + 전역 Provider + 탭바 + NotFound (files: src/App.tsx, src/pages/NotFound.tsx, src/components/ErrorBoundary.tsx)
 - 0016: 적금 결과 화면 (state null 방어) (files: src/pages/SavingsResult.tsx)
+- 0017: [부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지 (files: src/pages/Settings.tsx)
 
 ## Available exports from existing files
 // src/App.tsx
@@ -202,9 +208,6 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
 
 // src/app/useAppData.ts
 export function useAppData(): AppDataContextValue {
-
-// src/components/AdFooterSlot.tsx
-export function AdFooterSlot() {
 
 // src/components/AdSlot.tsx
 export function AdSlot({ adGroupId, className, variant, theme }: AdSlotProps) {
@@ -263,7 +266,8 @@ export function TossPurchase({
 export function TossRewardAd({
 
 // src/components/VacationFormSheet.tsx
-export cons
+export const TYPE_LABEL: Record<VacationType, string> = {
+export function Vacati
 
 ## Memory Index (자동 학습 — 힌트로만 사용, 실제 코드 확인 필수)
 
