@@ -117,7 +117,10 @@ export * from '../domain/types';
   storage/
     __tests__/
     core.ts
+    flags.ts
     profile.ts
+    savingsInput.ts
+    vacation.ts
   styles/
     globals.css
     reward-ad.css
@@ -150,6 +153,10 @@ CRITICAL: Before creating any new function, type, or component, check the list a
 - 0001: 도메인 타입 + RouteState 계약 정의 (files: src/domain/types.ts, src/lib/types.ts)
 - 0002: 급여표 상수 + Asia/Seoul 날짜 유틸 (files: src/domain/payTable.ts, src/domain/date.ts, src/domain/__tests__/date.test.ts)
 - 0003: storage 코어 래퍼 + 프로필 저장소 (files: src/storage/core.ts, src/storage/profile.ts, src/storage/__tests__/profile.test.ts)
+- 0004: 휴가 · 플래그 · 적금입력 저장소 (files: src/storage/vacation.ts, src/storage/flags.ts, src/storage/savingsInput.ts, src/storage/__tests__/vacation.test.ts)
+
+## TDD 상태
+⚠️ TDD 테스트 파일 자동 작성에 실패했습니다. 소스 코드를 작성하기 전에 `src/__tests__/packet-XXXX.test.ts` 파일에 AC 기반 테스트를 먼저 작성하세요 (TDD red phase). 테스트 작성 후 구현하세요.
 
 ## Available exports from existing files
 // src/App.tsx
