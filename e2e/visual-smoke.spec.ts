@@ -18,9 +18,30 @@ const ROUTES: { path: string; name: string }[] = [
 ];
 
 /** 데이터가 필요한 화면용 localStorage 시드(앱에 맞게 채워라). 앱 스크립트보다 먼저 실행된다. */
-async function seed(page: Page): Promise<void> {
+async function seed(page: Page, routePath: string): Promise<void> {
+  // 홈("/") 대시보드는 프로필이 없으면 /onboarding으로 리다이렉트한다 — 실제 대시보드를
+  // 스모크로 보려면 온보딩을 마친 상태를 시드해야 한다. /onboarding 자체는 시드하지 않아야
+  // 폼(자리 입력)을 그대로 스모크할 수 있다(온보딩 완료 상태를 심으면 즉시 "/"로 리다이렉트됨).
+  if (routePath === "/onboarding") return;
+
   await page.addInitScript(() => {
-    // window.localStorage.setItem("MY_STORAGE_KEY", JSON.stringify({ /* ... */ }));
+    window.localStorage.setItem(
+      "enlistpay:profile",
+      JSON.stringify({
+        schemaVersion: 1,
+        branch: "ARMY",
+        enlistDate: "2025-03-02",
+        serviceMonths: 18,
+        dischargeDate: "2026-11-01",
+        nickname: "",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }),
+    );
+    window.localStorage.setItem(
+      "enlistpay:flags",
+      JSON.stringify({ onboardingDone: true, rewardUnlockedUntil: 0, payTableYear: 2025, disclaimerAckAt: 0 }),
+    );
   });
 }
 
@@ -35,7 +56,7 @@ for (const route of ROUTES) {
     });
     page.on("pageerror", (e) => errors.push(e.message));
 
-    await seed(page);
+    await seed(page, route.path);
     await page.goto(route.path);
     await page.waitForTimeout(1000); // React 렌더 + effect 정착
 

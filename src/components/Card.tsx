@@ -11,19 +11,36 @@ export function Card({
   children,
   style,
   testId,
+  onClick,
 }: {
   children: ReactNode;
   style?: CSSProperties;
   /** 레이아웃 테스트용 data-testid (예: getAllByTestId("strategy-card")) */
   testId?: string;
+  /** 카드 자체가 탭 가능한 진입점일 때(예: 홈 요약 카드 → 상세 화면 이동) */
+  onClick?: () => void;
 }) {
   return (
     <div
       data-testid={testId}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
       style={{
         padding: 16,
         borderRadius: 16,
         backgroundColor: "var(--adaptiveLayeredBackground)",
+        cursor: onClick ? "pointer" : undefined,
         ...style,
       }}
     >
