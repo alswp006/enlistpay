@@ -67,14 +67,6 @@ export type calculateDdayFn = (user: User) => DdayResult;
 /** Rank timeline data used in Rank page (0012) and Pay calculation (0007) (구현: 패킷 
 ```
 
-## ⏳ 시간 예약으로 미뤄진 화면 — 자리 페이지로만 존재한다(실패가 아니라 미룸)
-다음 화면 패킷은 시간 예약으로 미뤄져 이 밤에는 만들어지지 않는다. 스캐폴드(배선 선행)가 이 화면들을
-**"준비 중" 자리 페이지로 이미 import·라우트해 두었다** — 컴파일된다:
-- 0016 "적금 결과 화면 (state null 방어)" (src/pages/SavingsResult.tsx)
-- 0017 "[부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지" (src/pages/Settings.tsx)
-- **Route·import는 그대로 두어라.** 지우지도 말고 새로 채우지도 마라 — 자리 페이지(첫 줄 `@ai-factory:placeholder`)는 그 화면 패킷의 몫이다.
-- 존재하는(실속) 화면만 배선·연결하고, 테스트·검증 범위도 실속 화면으로 좁혀라 — 자리 페이지의 내용·동작을 검증하는 테스트는 게이트에서 막힌다.
-
 ## Shared Types Contract (IMPORT these, do NOT redefine)
 ```typescript
 export * from '../domain/types';
