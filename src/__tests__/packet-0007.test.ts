@@ -237,7 +237,7 @@ describe("F5: 월별 급여 계산 · 누적 합계 [packet 0007]", () => {
       const shortProfile: ServiceProfile = {
         schemaVersion: 1,
         branch: "ARMY",
-        enlistDate: "2026-01-01",
+        enlistDate: "2026-01-02",
         serviceMonths: 6,
         dischargeDate: "2026-07-01",
         nickname: "test",
