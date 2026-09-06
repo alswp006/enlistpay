@@ -17,8 +17,7 @@ const ROUTES: { path: string; name: string }[] = [
   { path: "/pay", name: "pay" },
   { path: "/vacation", name: "vacation" },
   { path: "/savings", name: "savings" },
-  // { path: "/result", name: "result" },   // ← 이 앱의 라우트를 추가
-  // { path: "/settings", name: "settings" },
+  { path: "/no-such-page", name: "notfound" },
 ];
 
 /** 데이터가 필요한 화면용 localStorage 시드(앱에 맞게 채워라). 앱 스크립트보다 먼저 실행된다. */

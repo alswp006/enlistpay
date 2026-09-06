@@ -7,7 +7,6 @@ import { Card } from '../components/Card';
 import { AdSlot } from '../components/AdSlot';
 import { CalcDisclaimer } from '../components/CalcDisclaimer';
 import { EmptyState } from '../components/StateView';
-import { FloatingTabBar } from '../components/FloatingTabBar';
 import { TossRewardAd } from '@/components/TossRewardAd';
 import { useAppData } from '../app/useAppData';
 import { useRewardUnlock } from '../hooks/useRewardUnlock';
@@ -15,13 +14,6 @@ import { calcServiceStatus } from '../domain/dday';
 import { calcMonthlyPayRows, sumPaidUntil } from '../domain/pay';
 import { PAY_TABLE_2025, RANK_LABEL } from '../domain/payTable';
 import { todayISO, formatWon, formatKoreanDate } from '../domain/date';
-
-const TAB_ITEMS = [
-  { label: '홈', path: '/' },
-  { label: '계급', path: '/rank' },
-  { label: '휴가', path: '/vacation' },
-  { label: '적금', path: '/savings' },
-];
 
 function formatYearMonth(yearMonth: string): string {
   const [year, month] = yearMonth.split('-').map(Number);
@@ -66,7 +58,6 @@ export default function Pay() {
   return (
     <ScreenScaffold
       top={<Top title={<Top.TitleParagraph>누적 급여</Top.TitleParagraph>} />}
-      bottom={<FloatingTabBar items={TAB_ITEMS} />}
     >
       <Spacing size={16} />
 

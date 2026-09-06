@@ -67,6 +67,14 @@ export type calculateDdayFn = (user: User) => DdayResult;
 /** Rank timeline data used in Rank page (0012) and Pay calculation (0007) (구현: 패킷 
 ```
 
+## ⏳ 시간 예약으로 미뤄진 화면 — 자리 페이지로만 존재한다(실패가 아니라 미룸)
+다음 화면 패킷은 시간 예약으로 미뤄져 이 밤에는 만들어지지 않는다. 스캐폴드(배선 선행)가 이 화면들을
+**"준비 중" 자리 페이지로 이미 import·라우트해 두었다** — 컴파일된다:
+- 0016 "적금 결과 화면 (state null 방어)" (src/pages/SavingsResult.tsx)
+- 0017 "[부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지" (src/pages/Settings.tsx)
+- **Route·import는 그대로 두어라.** 지우지도 말고 새로 채우지도 마라 — 자리 페이지(첫 줄 `@ai-factory:placeholder`)는 그 화면 패킷의 몫이다.
+- 존재하는(실속) 화면만 배선·연결하고, 테스트·검증 범위도 실속 화면으로 좁혀라 — 자리 페이지의 내용·동작을 검증하는 테스트는 게이트에서 막힌다.
+
 ## Shared Types Contract (IMPORT these, do NOT redefine)
 ```typescript
 export * from '../domain/types';
@@ -96,6 +104,7 @@ export * from '../domain/types';
     SummaryHero.tsx
     TossPurchase.tsx
     TossRewardAd.tsx
+    VacationFormSheet.tsx
   domain/
     __tests__/
     date.ts
@@ -160,9 +169,13 @@ export * from '../domain/types';
 - SummaryHero.tsx: SummaryHero
 - TossPurchase.tsx: TossPurchase
 - TossRewardAd.tsx: TossRewardAd
+- VacationFormSheet.tsx: VacationFormSheet
 
 ### Module Dependencies (import graph)
   pages/Onboarding.tsx → imports: app/useAppData, components/ScreenScaffold, components/BottomCTA, components/Card, domain/dday, domain/date, domain/payTable, lib/types
+  pages/Pay.tsx → imports: components/TossRewardAd
+  pages/Savings.tsx → imports: app/useAppData, components/ScreenScaffold, components/BottomCTA, components/CalcDisclaimer, domain/savings, storage/savingsInput, domain/date, lib/types
+  pages/Vacation.tsx → imports: components/ScreenScaffold, components/Card, components/StateView, components/FloatingTabBar, components/AdSlot, components/VacationFormSheet, app/useAppData, domain/vacation, domain/payTable, domain/date, lib/types
 CRITICAL: Before creating any new function, type, or component, check the list above. If something similar exists, import and use it.
 
 ## Already Implemented (do NOT duplicate or overwrite)
@@ -180,11 +193,9 @@ CRITICAL: Before creating any new function, type, or component, check the list a
 - 0012: 계급·진급 타임라인 화면 (files: src/pages/Rank.tsx)
 - 0013: 누적 급여 화면 — 리워드 광고 게이트 · 월별 내역 (files: src/pages/Pay.tsx)
 - 0014: 휴가 관리 화면 — 잔여 요약 · 기록 추가/삭제 (files: src/pages/Vacation.tsx, src/components/VacationFormSheet.tsx)
+- 0015: 적금 시뮬레이션 입력 화면 (files: src/pages/Savings.tsx)
 
 ## Available exports from existing files
-// src/App.tsx
-export default function App() {
-
 // src/app/AppDataProvider.tsx
 export interface AppDataContextValue {
 export const AppDataContext = createContext<AppDataContextValue | null>(null);
@@ -252,7 +263,8 @@ export function VacationFormSheet({
 
 // src/domain/date.ts
 export function daysInMonth(year: number, month: number): number {
-export function parseISO(is
+export function parseISO(iso: string): Date | null {
+export function toISO(
 
 ## Memory Index (자동 학습 — 힌트로만 사용, 실제 코드 확인 필수)
 

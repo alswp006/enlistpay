@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { ScreenScaffold } from '../components/ScreenScaffold';
 import { Card } from '../components/Card';
 import { CalcDisclaimer } from '../components/CalcDisclaimer';
-import { FloatingTabBar } from '../components/FloatingTabBar';
 import { useAppData } from '../app/useAppData';
 import { calcRankPeriods, getNextPromotion, isEarlyDischargeBeforeSergeant } from '../domain/rank';
 import { RANK_LABEL } from '../domain/payTable';
@@ -31,16 +30,6 @@ export default function Rank() {
   return (
     <ScreenScaffold
       top={<Top title={<Top.TitleParagraph>계급·진급</Top.TitleParagraph>} />}
-      bottom={
-        <FloatingTabBar
-          items={[
-            { label: '홈', path: '/' },
-            { label: '계급', path: '/rank' },
-            { label: '휴가', path: '/vacation' },
-            { label: '적금', path: '/savings' },
-          ]}
-        />
-      }
     >
       <Spacing size={16} />
 

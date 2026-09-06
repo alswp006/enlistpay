@@ -6,7 +6,6 @@ import { Card } from '../components/Card';
 import { Amount } from '../components/Amount';
 import { AdSlot } from '../components/AdSlot';
 import { CalcDisclaimer } from '../components/CalcDisclaimer';
-import { FloatingTabBar } from '../components/FloatingTabBar';
 import { useAppData } from '../app/useAppData';
 import { calcServiceStatus, calcDaysUntilEnlist } from '../domain/dday';
 import { getRankAt } from '../domain/rank';
@@ -66,17 +65,7 @@ export default function Home() {
       top={
         <Top
           title={<Top.TitleParagraph>EnlistPay</Top.TitleParagraph>}
-          right={<IconButton aria-label="설정" name="iconSettingRegular" onClick={() => navigate('/settings')} />}
-        />
-      }
-      bottom={
-        <FloatingTabBar
-          items={[
-            { label: '홈', path: '/' },
-            { label: '계급', path: '/rank' },
-            { label: '휴가', path: '/vacation' },
-            { label: '적금', path: '/savings' },
-          ]}
+          right={<IconButton aria-label="설정" name="icon-setting-mono" onClick={() => navigate('/settings')} />}
         />
       }
     >

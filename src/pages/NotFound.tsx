@@ -1,11 +1,39 @@
-// @ai-factory:placeholder
-// 배선 선행(wiring-first)이 깐 자리 페이지다 — App.tsx에 `*`로 이미 연결돼 있다.
-// 이 화면을 담당하는 패킷은 이 파일을 **통째로 교체**하라(위 마커 주석 포함 — 마커가 남으면 산출물로 인정되지 않는다).
+import { Asset, Button, Paragraph, Spacing, Top } from "@toss/tds-mobile";
+import { useNavigate } from "react-router-dom";
+import { ScreenScaffold } from "@/components/ScreenScaffold";
+
+/** 정의되지 않은 경로(오래된 링크·오타 URL)로 들어왔을 때 보여주는 화면. */
 export default function NotFound() {
+  const navigate = useNavigate();
+
   return (
-    <main data-testid="placeholder-not-found">
-      <h1>라우터 배선 + 전역 Provider + 탭바 + NotFound</h1>
-      <p>이 화면은 준비 중이에요.</p>
-    </main>
+    <ScreenScaffold top={<Top title={<Top.TitleParagraph>EnlistPay</Top.TitleParagraph>} />}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "50dvh",
+          textAlign: "center",
+        }}
+      >
+        <Asset.ContentIcon name="icon-warning-circle" alt="없는 화면" style={{ width: 48, height: 48 }} />
+        <Spacing size={16} />
+        <Paragraph.Text typography="t5">없는 화면이에요</Paragraph.Text>
+        <Spacing size={8} />
+        <Paragraph.Text typography="st13" color="secondary">
+          주소가 바뀌었거나 사라진 화면이에요. 홈에서 다시 찾아보세요.
+        </Paragraph.Text>
+      </div>
+
+      <Spacing size={24} />
+
+      <Button variant="fill" display="block" onClick={() => navigate("/")}>
+        홈으로 가기
+      </Button>
+
+      <Spacing size={24} />
+    </ScreenScaffold>
   );
 }

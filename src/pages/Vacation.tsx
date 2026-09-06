@@ -4,7 +4,6 @@ import { Top, Paragraph, Spacing, ListRow, Chip, Button, AlertDialog, Asset } fr
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { Card } from "@/components/Card";
 import { EmptyState } from "@/components/StateView";
-import { FloatingTabBar } from "@/components/FloatingTabBar";
 import { AdSlot } from "@/components/AdSlot";
 import { VacationFormSheet, TYPE_LABEL } from "@/components/VacationFormSheet";
 import { useAppData } from "@/app/useAppData";
@@ -49,16 +48,6 @@ export default function Vacation() {
   return (
     <ScreenScaffold
       top={<Top title={<Top.TitleParagraph>휴가</Top.TitleParagraph>} />}
-      bottom={
-        <FloatingTabBar
-          items={[
-            { label: "홈", path: "/" },
-            { label: "계급", path: "/rank" },
-            { label: "휴가", path: "/vacation" },
-            { label: "적금", path: "/savings" },
-          ]}
-        />
-      }
     >
       <Spacing size={16} />
 
@@ -89,7 +78,7 @@ export default function Vacation() {
       <Spacing size={24} />
       {vacations.length === 0 ? (
         <EmptyState
-          icon={<Asset.ContentIcon name="icon-calendar" alt="휴가 기록 없음" />}
+          icon={<Asset.ContentIcon name="icon-calendar-check" alt="휴가 기록 없음" />}
           title="아직 휴가 기록이 없어요"
           description="포상·위로 휴가를 받으면 기록해두세요"
           action={

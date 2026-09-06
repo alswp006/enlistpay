@@ -1,11 +1,18 @@
 import type { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Asset } from "@toss/tds-mobile";
 import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 
 export type TabItem = {
   label: string;
   /** Asset.ContentIcon 등(선택). 없으면 라벨만 표시. */
   icon?: ReactNode;
+  /**
+   * TDS 아이콘 이름(선택, 예: "icon-home-mono"). 활성 여부에 따라 색이 바뀌어야 하므로
+   * 완성된 노드(icon)가 아니라 이름으로 받아 여기서 색을 입힌다.
+   * ⚠️ CDN에 없는 이름을 주면 TDS가 렌더 중 throw한다(403 → "Wrong URL") — 검증된 이름만.
+   */
+  iconName?: string;
   path: string;
 };
 
@@ -18,9 +25,11 @@ export type TabItem = {
  * 이 컴포넌트는 네이티브 토스처럼 활성탭을 '아이콘+라벨 컬러 틴트'로만 표시한다
  * (배경 알약/Button variant=fill 금지). 활성 판정은 현재 경로(useLocation)로 자동.
  */
-export function FloatingTabBar({ items }: { items: TabItem[] }) {
+export function FloatingTabBar({ items, activePath }: { items: TabItem[]; activePath?: string }) {
   const navigate = useNavigate();
   const location = useLocation();
+  // 라우트 구조가 활성 탭을 알려주면(App의 TabScreen) 그 값을 쓰고, 없으면 현재 경로로 판정한다.
+  const currentPath = activePath ?? location.pathname;
 
   return (
     <nav
@@ -31,16 +40,21 @@ export function FloatingTabBar({ items }: { items: TabItem[] }) {
         left: 0,
         right: 0,
         bottom: 0,
+        zIndex: 10,
         display: "flex",
         justifyContent: "space-around",
         alignItems: "stretch",
-        padding: "6px 8px calc(var(--toss-safe-area-bottom) + 6px)",
+        paddingTop: 6,
+        paddingLeft: 8,
+        paddingRight: 8,
+        // 홈 인디케이터 영역까지 내려가지 않도록 safe-area만큼 더 띄운다.
+        paddingBottom: "calc(12px + env(safe-area-inset-bottom))",
         backgroundColor: "var(--adaptiveBackground)",
         borderTop: "1px solid var(--adaptiveGrey200)",
       }}
     >
       {items.map((item) => {
-        const active = location.pathname === item.path;
+        const active = currentPath === item.path;
         return (
           <button
             key={item.path}
@@ -75,7 +89,16 @@ export function FloatingTabBar({ items }: { items: TabItem[] }) {
               fontWeight: active ? 700 : 500,
             }}
           >
-            {item.icon}
+            {item.iconName ? (
+              <Asset.ContentIcon
+                name={item.iconName}
+                alt=""
+                color={active ? "var(--adaptiveBlue500)" : "var(--adaptiveGrey700)"}
+                style={{ width: 22, height: 22 }}
+              />
+            ) : (
+              item.icon
+            )}
             <span>{item.label}</span>
           </button>
         );

@@ -34,7 +34,8 @@ export function EmptyState({
         padding: "48px 24px",
       }}
     >
-      {icon}
+      {/* 아이콘 크기를 여기서 묶는다 — Asset.ContentIcon은 크기를 안 주면 원본(200px 이상)으로 커진다. */}
+      {icon ? <div style={{ display: "flex", width: 64, height: 64 }}>{icon}</div> : null}
       {icon ? <Spacing size={12} /> : null}
       <Paragraph.Text typography="t4">{title}</Paragraph.Text>
       {description ? (

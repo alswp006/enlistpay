@@ -1,10 +1,9 @@
 import { useState, type ComponentType, type FocusEvent, type ReactNode } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Top, TextField, Chip, ListRow, Switch, Paragraph, Spacing } from "@toss/tds-mobile";
+import { Top, TextField, Chip, ListRow, Switch, Paragraph, Spacing, Button } from "@toss/tds-mobile";
 import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 import { useAppData } from "@/app/useAppData";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
-import { SubmitFooter } from "@/components/BottomCTA";
 import { CalcDisclaimer } from "@/components/CalcDisclaimer";
 import { calcSavings, validateSavingsInput } from "@/domain/savings";
 import { loadSavingsInput, saveSavingsInput } from "@/storage/savingsInput";
@@ -94,6 +93,7 @@ export default function Savings() {
 
   function handleSubmit() {
     if (validateSavingsInput(input) !== null) return;
+    fireHaptic("success");
     saveSavingsInput(input);
     navigate("/savings/result", { state: { input, result: calcSavings(input) } });
   }
@@ -101,7 +101,6 @@ export default function Savings() {
   return (
     <ScreenScaffold
       top={<Top title={<Top.TitleParagraph>적금 시뮬레이션</Top.TitleParagraph>} />}
-      bottom={<SubmitFooter label="계산하기" onClick={handleSubmit} disabled={validationError !== null} />}
     >
       <Paragraph.Text typography="st13" color="secondary">
         매달 얼마씩 모을까요?
@@ -162,8 +161,13 @@ export default function Savings() {
         }
         right={<Switch checked={input.useGovMatch} onChange={handleGovMatchToggle} />}
       />
-      <Spacing size={96} />
+      <Spacing size={24} />
+      {/* 하단 고정 CTA 대신 흐름 안의 전체폭 버튼 — 이 화면은 탭 루트라 탭바와 겹치면 안 된다. */}
+      <Button variant="fill" display="block" onClick={handleSubmit} disabled={validationError !== null}>
+        계산하기
+      </Button>
       <CalcDisclaimer />
+      <Spacing size={96} />
     </ScreenScaffold>
   );
 }
