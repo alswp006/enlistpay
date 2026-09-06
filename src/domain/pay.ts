@@ -1,6 +1,9 @@
-import { addDays, daysInMonth, diffDays } from "./date";
+import { addDays, daysInMonth, diffDays, todayISO } from "./date";
+import { calcDischargeDate } from "./dday";
 import { getRankAt } from "./rank";
-import type { ISODate, MonthlyPayRow, PayTable, Rank, ServiceProfile } from "./types";
+import type { Branch, ISODate, MonthlyPayRow, PayTable, Rank, ServiceProfile } from "./types";
+import { PAY_TABLE_2025 } from "./payTable";
+import type { MilitaryBranch, PaySummary, User } from "@/lib/contract";
 
 function pad2(n: number): string {
   return String(n).padStart(2, "0");
@@ -73,4 +76,51 @@ export function sumByRank(rows: MonthlyPayRow[]): Record<Rank, number> {
   const result: Record<Rank, number> = { PRIVATE: 0, PFC: 0, CORPORAL: 0, SERGEANT: 0 };
   for (const row of rows) result[row.rank] += row.amount;
   return result;
+}
+
+// contract.ts의 MilitaryBranch(4종)는 domain Branch(5종, SOCIAL 포함)의 부분집합이라
+// 역매핑이 항상 성립한다 (SOCIAL은 User 쪽에 대응값이 없어 나타날 수 없음).
+const MILITARY_TO_BRANCH: Record<MilitaryBranch, Branch> = {
+  ARMY: "ARMY",
+  NAVY: "NAVY",
+  AIR_FORCE: "AIR_FORCE",
+  MARINE_CORPS: "MARINE",
+};
+
+/** 각 행이 오늘 기준으로 실제 지급 확정됐는지 여부 (sumPaidUntil과 동일한 지급 확정 기준). */
+function isPaidByToday(rows: MonthlyPayRow[], index: number, todayIso: ISODate): boolean {
+  const row = rows[index];
+  const isLast = index === rows.length - 1;
+  const effectiveEnd = isLast
+    ? addDays(firstDayOfYearMonth(row.yearMonth), row.servedDays - 1)
+    : lastDayOfYearMonth(row.yearMonth);
+  return effectiveEnd <= todayIso;
+}
+
+/** Contract-mandated cumulative pay calculation (src/lib/contract.ts: calculatePaySummaryFn) */
+export function calculatePaySummary(user: User): PaySummary {
+  const branch = MILITARY_TO_BRANCH[user.militaryBranch];
+  const enlistDate = user.enlistmentDate;
+  const serviceMonths = PAY_TABLE_2025.defaultServiceMonths[branch];
+  const dischargeDate = user.dischargeDate ?? calcDischargeDate({ enlistDate, serviceMonths });
+
+  const profile: ServiceProfile = {
+    schemaVersion: 1,
+    branch,
+    enlistDate,
+    serviceMonths,
+    dischargeDate,
+    nickname: "",
+    createdAt: 0,
+    updatedAt: 0,
+  };
+
+  const rows = calcMonthlyPayRows(profile, PAY_TABLE_2025);
+  const today = todayISO();
+  const paidRows = rows.filter((_, i) => isPaidByToday(rows, i, today));
+
+  return {
+    totalKrw: paidRows.reduce((sum, row) => sum + row.amount, 0),
+    monthlyBreakdown: paidRows.map((row) => ({ month: row.yearMonth, amountKrw: row.amount })),
+  };
 }

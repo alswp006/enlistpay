@@ -3,9 +3,11 @@ import {
   calcMonthlyPayRows,
   sumPaidUntil,
   sumByRank,
+  calculatePaySummary,
 } from "@/domain/pay";
 import { PAY_TABLE_2025 } from "@/domain/payTable";
 import type { ServiceProfile, Rank } from "@/lib/types";
+import type { User } from "@/lib/contract";
 
 describe("F5: 월별 급여 계산 · 누적 합계 (packet-0007)", () => {
   const profile: ServiceProfile = {
@@ -202,6 +204,58 @@ describe("F5: 월별 급여 계산 · 누적 합계 (packet-0007)", () => {
       expect(lastRow.daysInMonth).toBe(31);
       // 2027-07-04 (discharge) - 2027-07-01 + 1 = 4 days
       expect(lastRow.servedDays).toBe(4);
+    });
+  });
+
+  describe("calculatePaySummary (contract-mandated, packet-0007)", () => {
+    it("should export calculatePaySummary function", () => {
+      expect(typeof calculatePaySummary).toBe("function");
+    });
+
+    it("should sum all months for a discharged user (fully in the past)", () => {
+      const user: User = {
+        id: "u1",
+        militaryBranch: "ARMY",
+        enlistmentDate: "2024-01-05",
+        dischargeDate: "2025-07-04",
+      };
+      const rows = calcMonthlyPayRows(
+        { schemaVersion: 1, branch: "ARMY", enlistDate: "2024-01-05", serviceMonths: 18, dischargeDate: "2025-07-04", nickname: "", createdAt: 0, updatedAt: 0 },
+        PAY_TABLE_2025,
+      );
+      const expectedTotal = rows.reduce((sum, row) => sum + row.amount, 0);
+
+      const summary = calculatePaySummary(user);
+
+      expect(summary.totalKrw).toBe(expectedTotal);
+      expect(summary.monthlyBreakdown).toHaveLength(19);
+      expect(summary.monthlyBreakdown[0]).toEqual({ month: "2024-01", amountKrw: rows[0].amount });
+    });
+
+    it("should return 0 total and empty breakdown before enlistment", () => {
+      const user: User = {
+        id: "u2",
+        militaryBranch: "NAVY",
+        enlistmentDate: "2099-01-05",
+      };
+
+      const summary = calculatePaySummary(user);
+
+      expect(summary.totalKrw).toBe(0);
+      expect(summary.monthlyBreakdown).toEqual([]);
+    });
+
+    it("should derive dischargeDate from branch default service months when omitted", () => {
+      const user: User = {
+        id: "u3",
+        militaryBranch: "AIR_FORCE",
+        enlistmentDate: "2024-01-05",
+      };
+
+      const summary = calculatePaySummary(user);
+
+      expect(summary.totalKrw).toBeGreaterThan(0);
+      expect(summary.monthlyBreakdown.length).toBeGreaterThan(0);
     });
   });
 });
