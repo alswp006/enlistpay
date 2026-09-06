@@ -296,16 +296,20 @@ export function mockAppsInToss() {
 
 // ── Toss Reward Ad Component ──
 // TossRewardAd is a project-local component that wraps content behind ad viewing.
-// In tests, render the children directly (ad always "watched").
+//
+// ⚠️ NOT a vi.mock() helper (unlike the others above). Vitest hoists every literal
+// `vi.mock(...)` call to the top of the file it's WRITTEN in, unconditionally —
+// even one sitting inside a function that is never called (verified empirically:
+// importing only `harmless` from a helper whose unused function body contains
+// `vi.mock(...)` still activates that mock). A `vi.mock("@/components/TossRewardAd", ...)`
+// here would therefore fire for every test file that imports anything from this
+// module, silently overriding any page test's own inline mock for the same path
+// (whichever module happens to finish evaluating last wins the registration).
+// So: mock `@/components/TossRewardAd` inline in the page test itself (see
+// packet-0013.test.ts for the pattern — capture props, gate content, invoke
+// `onRewarded`), not via a shared helper.
 export function mockTossRewardAd() {
-  vi.mock("@/components/TossRewardAd", () => ({
-    TossRewardAd: ({ children, onReward }: any) => {
-      // Auto-trigger onReward in tests to unlock content
-      if (onReward) setTimeout(onReward, 0);
-      return children;
-    },
-    default: ({ children }: any) => children,
-  }));
+  // Intentionally a no-op — see warning above.
 }
 
 // ── react-router-dom ──

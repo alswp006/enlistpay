@@ -4,6 +4,7 @@
 // 화면 패킷: 이 파일을 건드리지 마라 — 자기 페이지 파일(자리 페이지)만 통째로 교체한다.
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { AppDataProvider } from './app/AppDataProvider';
 import Home from './pages/Home';
 import Onboarding from './pages/Onboarding';
 import Rank from './pages/Rank';
@@ -24,26 +25,28 @@ const DevTdsGallery = import.meta.env.DEV
 export default function App() {
   return (
     // @ai-factory:providers — 전역 Provider는 <Routes>를 감싸는 이 자리에 둔다(main.tsx는 @AI:ANCHOR, 수정 금지).
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/rank" element={<Rank />} />
-      <Route path="/pay" element={<Pay />} />
-      <Route path="/vacation" element={<Vacation />} />
-      <Route path="/savings" element={<Savings />} />
-      <Route path="/savings/result" element={<SavingsResult />} />
-      <Route path="/settings" element={<Settings />} />
-      <Route path="*" element={<NotFound />} />
-      {DevTdsGallery && (
-        <Route
-          path="/__tds-gallery"
-          element={
-            <Suspense fallback={null}>
-              <DevTdsGallery />
-            </Suspense>
-          }
-        />
-      )}
-    </Routes>
+    <AppDataProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/rank" element={<Rank />} />
+        <Route path="/pay" element={<Pay />} />
+        <Route path="/vacation" element={<Vacation />} />
+        <Route path="/savings" element={<Savings />} />
+        <Route path="/savings/result" element={<SavingsResult />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="*" element={<NotFound />} />
+        {DevTdsGallery && (
+          <Route
+            path="/__tds-gallery"
+            element={
+              <Suspense fallback={null}>
+                <DevTdsGallery />
+              </Suspense>
+            }
+          />
+        )}
+      </Routes>
+    </AppDataProvider>
   );
 }

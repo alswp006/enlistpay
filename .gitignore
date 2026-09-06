@@ -25,3 +25,6 @@ e2e/__shots__/
 
 # 페르소나 수복 증거 프레임 — 파이프라인이 쓰고 치우는 임시 파일(커밋 금지)
 __frame-*.jpeg
+
+# playwright install이 로컬에 받는 브라우저 바이너리 — 빌드 산출물, 커밋 금지
+__pw-browsers/
