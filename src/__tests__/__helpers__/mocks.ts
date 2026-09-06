@@ -33,8 +33,15 @@ export function mockTds() {
       React.createElement("button", { onClick, disabled: disabled || loading || undefined, "data-loading": loading ? "true" : undefined, ...props }, children),
 
     ListRow: Object.assign(
-      ({ children, onClick, ...props }: any) =>
-        React.createElement("div", { onClick, role: "listitem", ...props }, children),
+      ({ children, onClick, left, contents, right, ...props }: any) =>
+        React.createElement(
+          "div",
+          { onClick, role: "listitem", ...props },
+          left && React.createElement("span", { "data-slot": "left" }, left),
+          contents && React.createElement("span", { "data-slot": "contents" }, contents),
+          children,
+          right && React.createElement("span", { "data-slot": "right" }, right),
+        ),
       {
         Text: ({ children }: any) => React.createElement("span", null, children),
         Texts: ({ top, bottom, type }: any) =>
