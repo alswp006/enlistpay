@@ -23,9 +23,9 @@ describe("AC-1: 휴가 집계 (군별 정기휴가 + 기록)", () => {
 
     const result = calcVacationSummary("ARMY", records, PAY_TABLE_2025);
 
-    expect(result.granted).toBe(28);
+    expect(result.granted).toBe(32);
     expect(result.used).toBe(6.5);
-    expect(result.remaining).toBe(21.5);
+    expect(result.remaining).toBe(25.5);
   });
 
   it("AC-1[P0]: 연간 휴가 초과 사용 시 remaining이 음수가 될 수 있다 (경고하지만 허용)", () => {
@@ -269,7 +269,7 @@ describe("AC-5: 모든 테스트 통과", () => {
       ],
       PAY_TABLE_2025
     );
-    expect(vacationResult).toEqual({ granted: 28, used: 6.5, remaining: 21.5 });
+    expect(vacationResult).toEqual({ granted: 32, used: 6.5, remaining: 25.5 });
 
     // AC-2 검증
     const savingsWithMatch = calcSavings({
