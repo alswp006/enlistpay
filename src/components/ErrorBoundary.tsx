@@ -24,9 +24,8 @@ export class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
-  componentDidCatch(error: unknown, info: ErrorInfo) {
-    // 개발 중 원인 추적용. 프로덕션 WebView에서는 이 경로가 실행되지 않는 것이 정상이다.
-    console.error("[ErrorBoundary]", error, info.componentStack);
+  componentDidCatch() {
+    // 에러는 UI 상태(hasError)로 처리됨
   }
 
   handleRetry = () => {
