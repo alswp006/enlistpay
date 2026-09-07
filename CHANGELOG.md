@@ -1,8 +1,8 @@
 # Changelog
 
-## [0.1.0] - 2026-09-06
+## [0.1.0] - 2026-09-07
 
-16/19 packets completed.
+21/21 packets completed.
 
 ### Added
 - feat: 도메인 타입 + RouteState 계약 정의 (packet 0001)
@@ -20,4 +20,9 @@
 - feat: 누적 급여 화면 — 리워드 광고 게이트 · 월별 내역 (packet 0013)
 - feat: 휴가 관리 화면 — 잔여 요약 · 기록 추가/삭제 (packet 0014)
 - feat: 적금 시뮬레이션 입력 화면 (packet 0015)
+- feat: 적금 결과 화면 (state null 방어) (packet 0016)
+- feat: [부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지 (packet 0017)
 - feat: 라우터 배선 + 전역 Provider + 탭바 + NotFound (packet 0018)
+- feat: 배너 슬롯 래퍼 · 햅틱 헬퍼 · 검수 정책 정적 스캔 (packet 0019)
+- feat: 라우터 배선 복구 — 미구현 페이지 플레이스홀더로 tsc·빌드 통과 (packet heal-1-01)
+- feat: 배너 슬롯 래퍼 · 햅틱 헬퍼 · 자기검출 없는 정책 스캔 (0019 재작성) (packet heal-1-02)
