@@ -4,18 +4,25 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import fs from "node:fs";
 import path from "node:path";
-import { mockTds, mockAppsInToss, mockNavigate } from "@/__tests__/__helpers__/mocks";
+import { mockTds, mockAppsInToss, mockNavigate, mockLocation } from "@/__tests__/__helpers__/mocks";
 import type { AppFlags, ServiceProfile } from "@/lib/types";
 
 mockTds();
 mockAppsInToss();
 
-// react-router-dom: keep the real useLocation (FloatingTabBar/RouteGuard depend on it
-// reflecting the actual MemoryRouter path) — only stub useNavigate for assertions.
+// react-router-dom: route matching still follows the real MemoryRouter path (Routes/Route
+// read the router context directly), but `useLocation` imported from this specifier resolves
+// to the stub that mocks.ts registers — its literal `vi.mock` is hoisted for every file that
+// imports the helper, so this inline mock cannot win. Pages reading `location.state` therefore
+// see `mockLocation`; set it via setLocationState() as packet-0016 does.
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual<typeof import("react-router-dom")>("react-router-dom");
   return { ...actual, useNavigate: () => mockNavigate };
 });
+
+function setLocationState(state: unknown) {
+  (mockLocation as unknown as { state: unknown }).state = state;
+}
 
 const FULL_TERM_PROFILE: ServiceProfile = {
   schemaVersion: 1,
@@ -170,9 +177,11 @@ describe("라우터 배선 + 전역 Provider + 탭바 + NotFound", () => {
 
     mockProfile = FULL_TERM_PROFILE;
     mockFlags = ONBOARDED_FLAGS;
+    setLocationState(SAVINGS_RESULT_STATE);
     renderAppAt("/savings/result", SAVINGS_RESULT_STATE);
     expect(screen.queryByRole("tablist")).toBeNull();
     expect(screen.queryAllByRole("tab")).toHaveLength(0);
+    setLocationState(null);
   });
 
   it("AC-4: 탭바는 position:fixed이며 paddingBottom으로 safe-area를 확보해 콘텐츠를 가리지 않는다", () => {
