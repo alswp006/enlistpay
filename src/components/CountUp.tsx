@@ -15,12 +15,15 @@ type Typography = ComponentProps<typeof Paragraph.Text>["typography"];
 export function CountUp({
   value,
   unit = "원",
+  prefix = "",
   typography = "t1",
   durationMs = 700,
   testId,
 }: {
   value: number;
   unit?: string;
+  /** 숫자 앞에 붙는 고정 텍스트(예: "D-"). 애니메이션 대상 아님. */
+  prefix?: string;
   typography?: Typography;
   durationMs?: number;
   testId?: string;
@@ -65,6 +68,7 @@ export function CountUp({
       }}
     >
       <Paragraph.Text typography={typography}>
+        {prefix}
         {formatNumber(display)}
         {unit}
       </Paragraph.Text>

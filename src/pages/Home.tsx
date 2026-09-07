@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react';
 import { Top, Paragraph, Spacing, IconButton } from '@toss/tds-mobile';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ScreenScaffold } from '../components/ScreenScaffold';
 import { SummaryHero } from '../components/SummaryHero';
+import { CountUp } from '../components/CountUp';
 import { Card } from '../components/Card';
 import { Amount } from '../components/Amount';
 import { AdSlot } from '../components/AdSlot';
@@ -30,21 +32,21 @@ export default function Home() {
   const status = calcServiceStatus(profile, today);
 
   let heroLabel: string;
-  let heroValue: string;
+  let heroValue: ReactNode;
   let heroCaption: string;
 
   if (status.phase === 'BEFORE_ENLIST') {
     const daysUntil = calcDaysUntilEnlist(profile, today);
     heroLabel = '입대까지';
-    heroValue = `D-${daysUntil}`;
+    heroValue = <CountUp testId="dday-countup" value={daysUntil} unit="" prefix="D-" typography="t1" />;
     heroCaption = `입대일 ${formatKoreanDate(profile.enlistDate)}`;
   } else if (status.phase === 'DISCHARGED') {
     heroLabel = '전역했어요';
-    heroValue = `${status.progressPercent}%`;
+    heroValue = <Paragraph.Text typography="t1">{`${status.progressPercent}%`}</Paragraph.Text>;
     heroCaption = `전역일 ${formatKoreanDate(status.dischargeDate)}`;
   } else {
     heroLabel = '전역까지';
-    heroValue = `D-${status.remainingDays}`;
+    heroValue = <CountUp testId="dday-countup" value={status.remainingDays} unit="" prefix="D-" typography="t1" />;
     heroCaption = `전역일 ${formatKoreanDate(status.dischargeDate)}`;
   }
 
@@ -74,7 +76,7 @@ export default function Home() {
       <SummaryHero
         testId="dday-hero"
         label={heroLabel}
-        value={<Paragraph.Text typography="t1">{heroValue}</Paragraph.Text>}
+        value={heroValue}
         caption={heroCaption}
       />
 

@@ -1,6 +1,6 @@
 import { useState, type ComponentType, type ReactNode } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Top, Paragraph, Spacing, ListRow, Chip, Button, TextField, AlertDialog } from "@toss/tds-mobile";
+import { Top, Paragraph, Spacing, ListRow, Chip, Button, TextField, AlertDialog, Toast } from "@toss/tds-mobile";
 import { generateHapticFeedback } from "@apps-in-toss/web-framework";
 import { ScreenScaffold } from "@/components/ScreenScaffold";
 import { Card } from "@/components/Card";
@@ -43,6 +43,7 @@ export default function Settings() {
   const [enlistDraft, setEnlistDraft] = useState(profile?.enlistDate ?? "");
   const [monthsDraft, setMonthsDraft] = useState(String(profile?.serviceMonths ?? ""));
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   if (!profile) {
     return <Navigate to="/onboarding" replace />;
@@ -63,6 +64,7 @@ export default function Settings() {
       dischargeDate: calcDischargeDate({ enlistDate, serviceMonths }),
       updatedAt: Date.now(),
     });
+    setToastOpen(true);
   }
 
   function handleBranchChange(branch: Branch) {
@@ -159,6 +161,12 @@ export default function Settings() {
       />
 
       <Spacing size={96} />
+      <Toast
+        open={toastOpen}
+        position="bottom"
+        text="입대 정보를 수정했어요"
+        onClose={() => setToastOpen(false)}
+      />
     </ScreenScaffold>
   );
 }
