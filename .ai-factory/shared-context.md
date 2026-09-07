@@ -216,3 +216,86 @@ CRITICAL: Before creating any new function, type, or component, check the list a
 - 0017: [부가] 설정 화면 — 입대 정보 수정 · 데이터 초기화 · 정책 고지 (files: src/pages/Settings.tsx)
 - 0018: 라우터 배선 + 전역 Provider + 탭바 + NotFound (files: src/App.tsx, src/pages/NotFound.tsx, src/components/ErrorBoundary.tsx)
 - 0019: 배너 슬롯 래퍼 · 햅틱 헬퍼 · 검수 정책 정적 스캔 (files: src/components/AdFooterSlot.tsx, src/hooks/useHaptic.ts, scripts/policy-scan.mjs)
+
+## Available exports from existing files
+// src/App.tsx
+export default function App() {
+
+// src/app/AppDataProvider.tsx
+export interface AppDataContextValue {
+export const AppDataContext = createContext<AppDataContextValue | null>(null);
+export function AppDataProvider({ children }: { children: ReactNode }) {
+
+// src/app/useAppData.ts
+export function useAppData(): AppDataContextValue {
+
+// src/components/AdSlot.tsx
+export function AdSlot({ adGroupId, className, variant, theme }: AdSlotProps) {
+
+// src/components/Amount.tsx
+export function Amount({
+
+// src/components/BottomCTA.tsx
+export function SubmitFooter({
+export function ButtonStack({
+
+// src/components/CalcDisclaimer.tsx
+export function CalcDisclaimer() {
+
+// src/components/Card.tsx
+export function Card({
+
+// src/components/CountUp.tsx
+export function CountUp({
+
+// src/components/ErrorBoundary.tsx
+export class ErrorBoundary extends Component<Props, State> {
+
+// src/components/FloatingTabBar.tsx
+export type TabItem = {
+export function FloatingTabBar({ items, activePath }: { items: TabItem[]; activePath?: string }) {
+
+// src/components/MiniBar.tsx
+export function MiniBar({
+
+// src/components/PageShell.tsx
+export function PageShell({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+
+// src/components/RouteGuard.tsx
+export function RequireProfile({ children }: { children: ReactNode }) {
+export function RedirectIfOnboarded({ children }: { children: ReactNode }) {
+
+// src/components/ScreenScaffold.tsx
+export function ScreenScaffold({
+
+// src/components/Sparkline.tsx
+export function Sparkline({
+
+// src/components/StateView.tsx
+export function EmptyState({
+export function LoadingState({
+
+// src/components/SummaryHero.tsx
+export function SummaryHero({
+
+// src/components/TossPurchase.tsx
+export interface TossPurchaseResult {
+export function TossPurchase({
+
+// src/components/TossRewardAd.tsx
+export function TossRewardAd({
+
+// src/components/VacationFormSheet.tsx
+export const TYPE_LABEL: Record<VacationType, string> = {
+export function Vacati
+
+## Memory Index (자동 학습 — 힌트로만 사용, 실제 코드 확인 필수)
+
+Available topics: deploy(3), general(12), testing(1), ui(1)
+
+Key lessons (verify against actual code before applying):
+- [deploy] 라우터·프로바이더 같은 배선 파일을 머지할 때는 그 파일이 import하는 모든 모듈을 같은 변경 안에서 최소 플레이스홀더로라도 함께 생성해, 어느 커밋에서든 타입체크와 프로덕션 빌드가 단독으로 통과하도록 유지하라. (60% · 이 앱)
+- [general] 화면·라우팅 등 소비자 모듈은 그것이 import하는 생산자 모듈이 병합된 뒤에만 병합하고, 순서를 지킬 수 없으면 소비자 병합과 동시에 최소 플레이스홀더를 만들어 매 병합 직후 타입체크와 빌드가 항상 통과하도록 유지하라. (60% · 타 앱 1회 — 맹신 금지)
+- [general] 전역 라우팅·탭바·Provider 배선은 개별 화면보다 먼저(초반 20% 안에) 완료하고 미구현 화면은 스텁 라우트로 연결해, 시간 예산이 소진돼도 앱이 항상 실행 가능한 상태를 유지하라. (60% · 타 앱 1회 — 맹신 금지)
+- [general] 저장·데이터 접근 등 기반 계층 패킷은 이를 import 하는 화면 패킷보다 반드시 먼저 완료·병합하고, 미완료면 상위 화면 패킷 병합을 차단하라 — 빈 기반 모듈 하나가 전 라우트 스모크를 무너뜨린다. (60% · 타 앱 1회 — 맹신 금지)
+- [general] 외부에서 들어온 모든 값(라우터 state, 로컬 저장소, 부분 입력 폼)은 사용 직전에 배열·객체 기본값으로 정규화하고, 테이블/맵 조회 결과는 존재 확인 후에만 하위 속성이나 length에 접근하라. (60% · 타 앱 1회 — 맹신 금지)

@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots",
+    "policy-scan": "node scripts/policy-scan.mjs",
     "gate": "node scripts/finish-gate.mjs",
     "measure:tds": "node scripts/tds-density.mjs src"
   },
